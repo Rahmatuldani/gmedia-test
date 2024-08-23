@@ -5,7 +5,6 @@ import Cart from "../models/cart";
 import CartItem from "../models/cartItem";
 import Product from "../models/product";
 import { Validation } from "../validators";
-import Category from "../models/category";
 
 export const CartController = (() => {
     async function add(req: Request, res: Response) {
@@ -63,6 +62,13 @@ export const CartController = (() => {
         if (!Validation(req, res)) return;
 
         try {
+            const user = await Auth.findByPk(req.body.userId)
+            if (!user) {
+                return Responses(res, {
+                    status: 404,
+                    message: "User not found"
+                })
+            }
             const cart = await Cart.findOne({ 
                 where: { 
                     userId: req.body.userId,
@@ -74,18 +80,22 @@ export const CartController = (() => {
                 }] 
             })
 
-            let cartItems;
-            if (cart) {
-                cartItems = await CartItem.findAll({
-                    where: {
-                        cartId: cart.id
-                    },
-                    include: [{
-                        model: Product,
-                        as: "product"
-                    }]
+            if (!cart) {
+                return Responses(res, {
+                    status: 404,
+                    message: "User not have a cart",
                 })
             }
+
+            const cartItems = await CartItem.findAll({
+                where: {
+                    cartId: cart.id
+                },
+                include: [{
+                    model: Product,
+                    as: "product"
+                }]
+            })
 
             return Responses(res, {
                 status: 200,
@@ -103,8 +113,84 @@ export const CartController = (() => {
         }
     }
 
+    async function payment(req: Request, res: Response) {
+        if (!Validation(req, res)) return;
+        try {
+            const user = await Auth.findByPk(req.body.userId)
+            if (!user) {
+                return Responses(res, {
+                    status: 404,
+                    message: "User not found"
+                })
+            }
+            const cart = await Cart.findOne({ 
+                where: { 
+                    userId: req.body.userId,
+                    status: 0
+                }
+            })
+
+            if (!cart) {
+                return Responses(res, {
+                    status: 404,
+                    message: "User not have a cart",
+                })
+            }
+            
+            cart.status = 1
+            cart.save()
+
+            return Responses(res, {
+                status: 200,
+                message: "Payment success",
+            })
+        } catch (error) {
+            return Responses(res, {
+                status: 500,
+                message: "Internal Server Error"
+            })
+        }
+    }
+
+    async function removeItem(req: Request, res: Response) {
+        if (!Validation(req, res)) return;
+        try {
+            const cart = await Cart.findByPk(req.body.cartId)
+
+            if (!cart) {
+                return Responses(res, {
+                    status: 404,
+                    message: "Cart not found",
+                })
+            }
+            
+            const cartitem = await CartItem.findByPk(req.body.cartItemId)
+
+            if (!cartitem) {
+                return Responses(res, {
+                    status: 404,
+                    message: "Cart item not found",
+                })
+            }
+
+            await cartitem.destroy()
+
+            return Responses(res, {
+                status: 200,
+                message: "Delete cart item success",
+            })
+        } catch (error) {
+            return Responses(res, {
+                status: 500,
+                message: "Internal Server Error"
+            })
+        }
+    }
+
     return {
         add,
-        find
+        find,
+        payment,
+        removeItem
     }
 })()

@@ -12,13 +12,15 @@ const categoryRoutes: Router = express.Router()
  *      tags:
  *      - Categories
  *      summary: Fetch all category data
+ *      security: 
+ *          - bearerAuth: []
  *      responses:
  *          200:
  *              description: Success
  *          500:
  *              description: Internal Service Error
  */
-categoryRoutes.get("/", categoryControllers.find)
+categoryRoutes.get("/", AuthMiddleware, categoryControllers.find)
 
 /**
  * @openapi
@@ -27,6 +29,8 @@ categoryRoutes.get("/", categoryControllers.find)
  *      tags:
  *      - Categories
  *      summary: Create new category
+ *      security: 
+ *          - bearerAuth: []
  *      requestBody:
  *          required: true
  *          content:
@@ -45,6 +49,6 @@ categoryRoutes.get("/", categoryControllers.find)
  *          500:
  *              description: Internal Service Error
  */
-categoryRoutes.post("/", CategoryValidator.create, categoryControllers.create)
+categoryRoutes.post("/", AuthMiddleware, CategoryValidator.create, categoryControllers.create)
 
 export default categoryRoutes;

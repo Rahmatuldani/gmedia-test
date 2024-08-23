@@ -17,8 +17,19 @@ export const CartValidator = (() => {
         body("quantity").isNumeric().withMessage("quantity must be a Numeric"),
     ]
 
+    const deleteItem = [
+        body("cartId").exists().withMessage("cartId is required"),
+        body("cartId").not().isEmpty().withMessage("cartId must be not null"),
+        body("cartId").isNumeric().withMessage("cartId must be a Numeric"),
+
+        body("cartItemId").exists().withMessage("cartItemId is required"),
+        body("cartItemId").not().isEmpty().withMessage("cartItemId must be not null"),
+        body("cartItemId").isNumeric().withMessage("cartItemId must be a Numeric"),
+    ]
+
     return {
         add,
-        find
+        find,
+        deleteItem
     }
 })();
