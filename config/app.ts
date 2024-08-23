@@ -6,6 +6,7 @@ export const appConfig = {
     port: process.env.APP_PORT || 8080,
     host: process.env.APP_HOST || "localhost",
     env: process.env.APP_ENV || "local",
+    secret: process.env.APP_SECRET || "secret_key",
 
     dbConnection: process.env.DB_CONNECTION || "mysql",
     dbHost: process.env.DB_HOST || "127.0.0.1",

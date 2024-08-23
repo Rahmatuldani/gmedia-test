@@ -10,11 +10,12 @@ export const createDatabase = async () => {
             password: appConfig.dbPassword
         })
 
-        await connection.query(`CREATE DATABASE IF NOT EXISTS \`${appConfig.dbName}\`;`)
+        await connection.query(`CREATE DATABASE IF NOT EXISTS \`${appConfig.dbName}\`;`);
 
+        // Close the connection
         await connection.end();
     } catch (error) {
-        console.error('[database] Error : ', error)
+        return error
     }
 }
 

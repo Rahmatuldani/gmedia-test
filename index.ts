@@ -20,9 +20,12 @@ app.get("/", (req: Request, res: Response) => res.render("welcome"))
 swaggerDocs(app)
 
 createDatabase()
+.then(() => {
+    sequelize.sync()
+        .then(res => console.log("[database] Database connected"))
+        .catch(error => console.error("[database] Error : ", error))
+})
+.catch(err => console.error("[database] Error : ", err))
 
-sequelize.sync()
-    .then(res => console.log("[database] Database connected"))
-    .catch(error => console.error("[database] Error : ", error))
 
 app.listen(appConfig.port, () => console.log(`[server] Server run on ${appConfig.host}:${appConfig.port}`))
