@@ -24,7 +24,7 @@ const authControllers = (() => {
                 message: "Wrong password"
             })
 
-            const jwt = JWT.generate(auth)
+            const jwt = JWT.generate(auth.id.toString())
 
             return Responses(res, {
                 status: 200,

@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import authControllers from "../app/controllers/auth";
-import { AuthMiddleware } from "../app/validators/auth";
+import { AuthValidator } from "../app/validators/auth";
 
 const authRoutes: Router = express.Router()
 
@@ -33,7 +33,7 @@ const authRoutes: Router = express.Router()
  *          500:
  *              description: Internal Service Error
  */
-authRoutes.post("/login", AuthMiddleware.login, authControllers.login)
+authRoutes.post("/login", AuthValidator.login, authControllers.login)
 
 /**
  * @openapi
@@ -68,6 +68,6 @@ authRoutes.post("/login", AuthMiddleware.login, authControllers.login)
  *          500:
  *              description: Internal Service Error
  */
-authRoutes.post("/register", AuthMiddleware.register, authControllers.register)
+authRoutes.post("/register", AuthValidator.register, authControllers.register)
 
 export default authRoutes;

@@ -3,7 +3,7 @@ import { Response } from "express";
 interface Props {
     status: number;
     message: string;
-    data?: object | string;
+    data?: object | object[] | string;
     error?: string;
 }
 

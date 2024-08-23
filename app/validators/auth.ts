@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 
-export const AuthMiddleware = (() => {
+export const AuthValidator = (() => {
     const login = [
         body("username").exists().withMessage("username is required"),
         body("username").not().isEmpty().withMessage("username must be not null"),
