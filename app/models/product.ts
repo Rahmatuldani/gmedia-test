@@ -1,27 +1,29 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../../config/database";
+import Category from "./category";
 
-export type AuthType = {
+export type ProductType = {
     id: number;
     name: string;
-    username: string;
-    password: string;
+    price: number;
+    categoryId: number;
     createdAt: Date;
     updatedAt: Date;
 }
 
-interface AuthAttributes extends Optional<AuthType, 'id' | 'createdAt' | 'updatedAt'> {}
+interface ProductAttributes extends Optional<ProductType, 'id' | 'createdAt' | 'updatedAt'> {}
 
-class Auth extends Model<AuthType, AuthAttributes> implements AuthType {
+class Product extends Model<ProductType, ProductAttributes> implements ProductType {
     public id!: number;
     public name!: string;
-    public username!: string;
-    public password!: string;
+    public price!: number;
+    public categoryId!: number;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 }
-Auth.init({
+
+Product.init({
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
@@ -31,20 +33,26 @@ Auth.init({
         type: DataTypes.STRING,
         allowNull: false,
     },
-    username: {
-        type: DataTypes.STRING,
+    price: {
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
-    password: {
-        type: DataTypes.STRING,
+    categoryId: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
 }, {
     sequelize,
-    tableName: "auth",
+    tableName: "products",
     timestamps: true
 })
 
-export default Auth;
+Product.belongsTo(Category, {
+    targetKey: "id",
+    foreignKey: "categoryId",
+    as: "category"
+})
+
+export default Product;

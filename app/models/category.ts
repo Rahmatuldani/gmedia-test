@@ -17,9 +17,10 @@ class Category extends Model<CategoryType, CategoryAttributes> implements Catego
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 }
+
 Category.init({
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true
     },
