@@ -1,16 +1,23 @@
 import { appConfig } from './app';
 import { Sequelize } from "sequelize";
-import mysql from "mysql2/promise"
+import { Client } from 'pg';
 
 export const createDatabase = async () => {
+    const connection = new Client ({
+        user: appConfig.dbUsername,
+        host: appConfig.dbHost,
+        database: "postgres",
+        password: appConfig.dbPassword,
+        port: 5432
+    })
     try {
-        const connection = await mysql.createConnection({
-            host: appConfig.dbHost,
-            user: appConfig.dbUsername,
-            password: appConfig.dbPassword
-        })
+        await connection.connect()
 
-        await connection.query(`CREATE DATABASE IF NOT EXISTS \`${appConfig.dbName}\`;`);
+        const res = await connection.query(`SELECT 1 FROM pg_database WHERE datname = $1`, [appConfig.dbName])
+
+        if (res.rowCount === 0) {
+            await connection.query(`CREATE DATABASE ${appConfig.dbName}`);
+        }
 
         // Close the connection
         await connection.end();
@@ -21,5 +28,5 @@ export const createDatabase = async () => {
 
 export const sequelize: Sequelize = new Sequelize(appConfig.dbName, appConfig.dbUsername, appConfig.dbPassword, {
     host: appConfig.dbHost,
-    dialect: "mysql"
+    dialect: "postgres"
 })

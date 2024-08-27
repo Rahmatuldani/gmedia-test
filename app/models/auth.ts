@@ -23,7 +23,7 @@ class Auth extends Model<AuthType, AuthAttributes> implements AuthType {
 }
 Auth.init({
     id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },

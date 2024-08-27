@@ -25,7 +25,7 @@ class Product extends Model<ProductType, ProductAttributes> implements ProductTy
 
 Product.init({
     id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
@@ -38,7 +38,7 @@ Product.init({
         allowNull: false,
     },
     categoryId: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     createdAt: DataTypes.DATE,
